@@ -51,7 +51,6 @@ func LeerConsola() {
 			log.Println("Fin del programa.")
 			break
 		}
-
 		log.Println("Ingresado:", text)
 	}
 
@@ -61,7 +60,24 @@ func GenerarYEnviarPaquete() {
 	paquete := Paquete{}
 
 	// Leemos y cargamos el paquete
+	reader := bufio.NewReader(os.Stdin)
+	log.Println("Ingrese las líneas del paquete (una vacía para finalizar):")
 
+	for {
+		text, err := reader.ReadString('\n')
+		if err != nil {
+			log.Println("Error al leer entrada:", err)
+			continue
+		}
+		text = strings.TrimSpace(text)
+
+		if text == "" {
+			log.Println("Entrada vacía detectada. Finalizando carga del paquete.")
+			break
+		}
+		log.Println("Se anadio con exito la linea:", text, "al paquete")
+		paquete.Valores = append(paquete.Valores, text)
+	}
 	log.Printf("paqute a enviar: %+v", paquete)
 	EnviarPaquete(globals.ClientConfig.Ip, globals.ClientConfig.Puerto, paquete)
 	// Enviamos el paqute
